@@ -3,11 +3,11 @@ import type { Resource } from '@/lib/supabase'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+//import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { DollarSign, Calendar, ArrowRight, Search } from 'lucide-react'
+import { DollarSign, Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import { ScholarshipFilters } from '@/components/scholarship-filters'
+//import { ScholarshipFilters } from '@/components/scholarship-filters'
 
 async function getAllScholarships() {
   const { data, error } = await supabase
@@ -27,12 +27,19 @@ async function getAllScholarships() {
 export default async function ScholarshipsPage() {
   const scholarships = await getAllScholarships()
   
+  // helper to safely check includes on possible string or array fields
+  const fieldIncludes = (field: unknown, needle: string) => {
+    if (typeof field === 'string') return field.includes(needle)
+    if (Array.isArray(field)) return field.includes(needle)
+    return false
+  }
+
   const undergrad = scholarships.filter(s => 
-    s.metadata?.level?.includes('Undergraduate') || s.tags?.includes('undergraduate')
+    fieldIncludes(s.metadata?.level, 'Undergraduate') || fieldIncludes(s.tags, 'undergraduate')
   )
   const graduate = scholarships.filter(s => 
-    s.metadata?.level?.includes('Masters') || s.metadata?.level?.includes('PhD') || 
-    s.tags?.includes('graduate') || s.tags?.includes('doctoral')
+    fieldIncludes(s.metadata?.level, 'Masters') || fieldIncludes(s.metadata?.level, 'PhD') || 
+    fieldIncludes(s.tags, 'graduate') || fieldIncludes(s.tags, 'doctoral')
   )
 
   return (
@@ -106,7 +113,7 @@ function ScholarshipGrid({ scholarships }: { scholarships: Resource[] }) {
           <CardHeader>
             <div className="flex justify-between items-start mb-3">
               <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                {scholarship.metadata?.level || 'Scholarship'}
+                {typeof scholarship.metadata?.level === 'string' ? scholarship.metadata.level : 'Scholarship'}
               </Badge>
               {scholarship.amount && (
                 <Badge variant="outline" className="flex items-center gap-1">
@@ -136,13 +143,13 @@ function ScholarshipGrid({ scholarships }: { scholarships: Resource[] }) {
               </div>
             )}
 
-            {scholarship.eligibility && (
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="text-sm font-semibold mb-1 text-blue-900">Eligibility:</p>
-                <p className="text-sm text-blue-800">{scholarship.eligibility}</p>
-              </div>
-            )}
-
+            <div className="flex flex-wrap gap-2">
+              {(Array.isArray(scholarship.tags) ? scholarship.tags.slice(0, 4) : []).map((tag) => (
+                <Badge key={String(tag)} variant="secondary" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
             <div className="flex flex-wrap gap-2">
               {scholarship.tags?.slice(0, 4).map((tag) => (
                 <Badge key={tag} variant="secondary" className="text-xs">

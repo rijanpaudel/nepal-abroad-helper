@@ -117,7 +117,7 @@ export default async function Home() {
               The Problem: Education Consultancies Charge NPR 50,000 - 200,000
             </h2>
             <p className="text-gray-700 text-lg mb-6">
-              For information that's already free online. We've curated everything you need from official sources—completely free.
+              For information that&apos;s already free online. We&apos;ve curated everything you need from official sources—completely free.
             </p>
             <div className="grid md:grid-cols-3 gap-4 text-left">
               <Card>

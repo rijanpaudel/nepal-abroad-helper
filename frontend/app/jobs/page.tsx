@@ -3,11 +3,11 @@ import type { Resource } from '@/lib/supabase'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Briefcase, ExternalLink, Clock, MapPin } from 'lucide-react'
+import { Briefcase, ExternalLink, Clock } from 'lucide-react'
 import Link from 'next/link'
 
 async function getJobResources() {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('resources')
     .select('*')
     .eq('category', 'job')
@@ -83,7 +83,11 @@ export default async function JobsPage() {
                 <div className="flex items-center gap-2 mb-2">
                   <Briefcase className="h-5 w-5 text-purple-600" />
                   <Badge variant="secondary">
-                    {resource.metadata?.job_type || resource.metadata?.resource_type || 'Job Resource'}
+                    {typeof resource.metadata?.job_type === 'string'
+                      ? resource.metadata.job_type
+                      : typeof resource.metadata?.resource_type === 'string'
+                      ? resource.metadata.resource_type
+                      : 'Job Resource'}
                   </Badge>
                 </div>
                 <CardTitle className="text-xl">{resource.title}</CardTitle>

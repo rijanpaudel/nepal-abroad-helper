@@ -42,20 +42,20 @@ export default function AskAIPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-yellow-500" />
-                What You'll Be Able to Ask:
+                What You&apos;ll Be Able to Ask:
               </CardTitle>
               <CardDescription className="space-y-2 mt-4">
-                <p>• "Which scholarships am I eligible for with 85% GPA?"</p>
-                <p>• "How much money do I need to show for study permit?"</p>
-                <p>• "What are the best universities for Computer Science?"</p>
-                <p>• "Can I work while studying in Canada?"</p>
-                <p>• "Compare UBC vs University of Toronto for Engineering"</p>
+                <p>• &quot;Which scholarships am I eligible for with 85% GPA?&quot;</p>
+                <p>• &quot;How much money do I need to show for study permit?&quot;</p>
+                <p>• &quot;What are the best universities for Computer Science?&quot;</p>
+                <p>• &quot;Can I work while studying in Canada?&quot;</p>
+                <p>• &quot;Compare UBC vs University of Toronto for Engineering&quot;</p>
               </CardDescription>
             </CardHeader>
           </Card>
 
           <p className="mt-8 text-gray-600">
-            We're building this feature next! Check back soon.
+            We&apos;re building this feature next! Check back soon.
           </p>
         </div>
       </div>

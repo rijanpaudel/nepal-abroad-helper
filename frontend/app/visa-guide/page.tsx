@@ -7,7 +7,7 @@ import { ExternalLink, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 
 async function getVisaResources() {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('resources')
     .select('*')
     .eq('category', 'visa')
@@ -166,7 +166,7 @@ export default async function VisaGuidePage() {
               <Card key={resource.id} className="hover:shadow-lg transition">
                 <CardHeader>
                   <Badge className="w-fit mb-2" variant="secondary">
-                    {resource.metadata?.resource_type || 'Official'}
+                    {String(resource.metadata?.resource_type || 'Official')}
                   </Badge>
                   <CardTitle className="text-lg">{resource.title}</CardTitle>
                   <CardDescription>{resource.description}</CardDescription>
