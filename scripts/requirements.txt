@@ -20,3 +20,4 @@ tiktoken==0.5.2
 # Utilities
 python-dotenv==1.0.1
 schedule==1.2.1
+openai==1.12.0
