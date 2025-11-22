@@ -57,6 +57,9 @@ export default async function Home() {
             <Link href="/ask-ai" className="text-gray-600 hover:text-blue-600 transition">
               Ask AI
             </Link>
+            <Link href="/document-review" className="text-gray-600 hover:text-blue-600 transition">
+            Document Review
+            </Link>
           </div>
           <Button asChild>
             <Link href="/scholarships">Get Started</Link>
