@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   FileText,
   Sparkles,
@@ -13,9 +13,9 @@ import {
   AlertCircle,
   Loader2,
   Copy,
-  Download,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import Link from 'next/link'
 
 const EXAMPLE_SOP = `I am writing to express my strong interest in pursuing a Master's degree in Computer Science at the University of Toronto. Having completed my Bachelor's degree in Computer Engineering from Tribhuvan University with a GPA of 3.8/4.0, I am eager to advance my knowledge in artificial intelligence and machine learning.
 
@@ -110,7 +110,7 @@ export default function DocumentReviewPage() {
         if (response.status === 429) {
           setError(
             `Rate limit exceeded. You've used all 5 reviews for today. ` +
-              `Try again after ${new Date(data.retryAfter).toLocaleString()}`
+            `Try again after ${new Date(data.retryAfter).toLocaleString()}`
           );
         } else {
           setError(data.error || "Failed to generate review");
@@ -147,37 +147,37 @@ export default function DocumentReviewPage() {
       {/* Navigation */}
       <nav className="border-b bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="/" className="text-2xl font-bold text-blue-600">
+          <Link href="/" className="text-2xl font-bold text-blue-600">
             Nepali Abroad Helper
-          </a>
+          </Link>
           <div className="flex gap-6">
-            <a
+            <Link
               href="/scholarships"
               className="text-gray-600 hover:text-blue-600 transition"
             >
               Scholarships
-            </a>
-            <a
+            </Link>
+            <Link
               href="/visa-guide"
               className="text-gray-600 hover:text-blue-600 transition"
             >
               Visa Guide
-            </a>
-            <a
+            </Link>
+            <Link
               href="/jobs"
               className="text-gray-600 hover:text-blue-600 transition"
             >
               Jobs
-            </a>
-            <a
+            </Link>
+            <Link
               href="/ask-ai"
               className="text-gray-600 hover:text-blue-600 transition"
             >
               Ask AI
-            </a>
-            <a href="/document-review" className="text-blue-600 font-medium">
+            </Link>
+            <Link href="/document-review" className="text-blue-600 font-medium">
               Document Review
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
@@ -225,7 +225,7 @@ export default function DocumentReviewPage() {
                     </label>
                     <Tabs
                       value={documentType}
-                      onValueChange={(v) => setDocumentType(v as any)}
+                      onValueChange={(v) => setDocumentType(v as "sop" | "resume" | "cover-letter")}
                     >
                       <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="sop">SOP</TabsTrigger>
@@ -247,8 +247,8 @@ export default function DocumentReviewPage() {
                       documentType === "sop"
                         ? "Paste your Statement of Purpose here..."
                         : documentType === "resume"
-                        ? "Paste your resume text here..."
-                        : "Paste your cover letter here..."
+                          ? "Paste your resume text here..."
+                          : "Paste your cover letter here..."
                     }
                     className="min-h-[400px] font-mono text-sm"
                   />
@@ -360,8 +360,8 @@ export default function DocumentReviewPage() {
                               score >= 80
                                 ? "default"
                                 : score >= 60
-                                ? "secondary"
-                                : "destructive"
+                                  ? "secondary"
+                                  : "destructive"
                             }
                             className="mt-2"
                           >
@@ -392,7 +392,7 @@ export default function DocumentReviewPage() {
                     <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>Your feedback will appear here after analysis</p>
                     <p className="text-sm mt-2">
-                      Paste your document and click "Get Feedback"
+                      Paste your document and click &quot;Get Feedback&quot;
                     </p>
                   </CardContent>
                 </Card>
