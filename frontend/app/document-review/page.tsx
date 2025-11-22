@@ -13,6 +13,8 @@ import {
   AlertCircle,
   Loader2,
   Copy,
+  Menu,
+  X,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import Link from 'next/link'
@@ -75,6 +77,7 @@ export default function DocumentReviewPage() {
   const [score, setScore] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [remainingReviews, setRemainingReviews] = useState<number | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const wordCount = documentText
     .trim()
@@ -143,65 +146,92 @@ export default function DocumentReviewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Navigation */}
-      <nav className="border-b bg-white sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-blue-50">
+      {/* Enhanced Navigation */}
+      <nav className="border-b bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
+          <Link href="/" className="text-2xl font-bold font-heading bg-gradient-primary bg-clip-text text-transparent">
             Nepali Abroad Helper
           </Link>
-          <div className="flex gap-6">
-            <Link
-              href="/scholarships"
-              className="text-gray-600 hover:text-blue-600 transition"
-            >
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex gap-6">
+            <Link href="/scholarships" className="text-gray-700 hover:text-primary transition-smooth font-medium">
               Scholarships
             </Link>
-            <Link
-              href="/visa-guide"
-              className="text-gray-600 hover:text-blue-600 transition"
-            >
+            <Link href="/visa-guide" className="text-gray-700 hover:text-primary transition-smooth font-medium">
               Visa Guide
             </Link>
-            <Link
-              href="/jobs"
-              className="text-gray-600 hover:text-blue-600 transition"
-            >
+            <Link href="/jobs" className="text-gray-700 hover:text-primary transition-smooth font-medium">
               Jobs
             </Link>
-            <Link
-              href="/ask-ai"
-              className="text-gray-600 hover:text-blue-600 transition"
-            >
+            <Link href="/ask-ai" className="text-gray-700 hover:text-primary transition-smooth font-medium">
               Ask AI
             </Link>
-            <Link href="/document-review" className="text-blue-600 font-medium">
+            <Link href="/document-review" className="text-primary font-semibold">
               Document Review
             </Link>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-smooth"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t bg-white animate-slide-down">
+            <div className="container mx-auto px-4 py-4 flex flex-col gap-3">
+              <Link href="/scholarships" className="px-4 py-3 hover:bg-gray-50 rounded-lg transition-smooth font-medium" onClick={() => setMobileMenuOpen(false)}>
+                Scholarships
+              </Link>
+              <Link href="/visa-guide" className="px-4 py-3 hover:bg-gray-50 rounded-lg transition-smooth font-medium" onClick={() => setMobileMenuOpen(false)}>
+                Visa Guide
+              </Link>
+              <Link href="/jobs" className="px-4 py-3 hover:bg-gray-50 rounded-lg transition-smooth font-medium" onClick={() => setMobileMenuOpen(false)}>
+                Jobs
+              </Link>
+              <Link href="/ask-ai" className="px-4 py-3 hover:bg-gray-50 rounded-lg transition-smooth font-medium" onClick={() => setMobileMenuOpen(false)}>
+                Ask AI
+              </Link>
+              <Link href="/document-review" className="px-4 py-3 bg-primary/10 text-primary rounded-lg font-semibold" onClick={() => setMobileMenuOpen(false)}>
+                Document Review
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
-      {/* Header */}
-      <section className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <FileText className="h-16 w-16 mx-auto mb-4" />
-          <h1 className="text-4xl font-bold mb-4">AI Document Review</h1>
-          <p className="text-xl opacity-90 max-w-3xl mx-auto mb-6">
+      {/* Enhanced Header */}
+      <section className="relative bg-gradient-warm text-white py-16 md:py-20 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 right-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <FileText className="h-16 w-16 mx-auto mb-4 animate-float" />
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-heading mb-4">AI Document Review</h1>
+          <p className="text-lg md:text-xl opacity-95 max-w-3xl mx-auto mb-6">
             Get expert-level feedback on your SOP, resume, or cover letter in
             seconds. Powered by advanced AI trained on thousands of successful
             applications.
           </p>
-          <div className="flex gap-4 justify-center items-center">
-            <Badge variant="secondary" className="bg-white/20 text-white">
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center items-center">
+            <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30 transition-smooth">
               <Sparkles className="h-4 w-4 mr-1" />
               Expert-Level Analysis
             </Badge>
-            <Badge variant="secondary" className="bg-white/20 text-white">
+            <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30 transition-smooth">
               <CheckCircle className="h-4 w-4 mr-1" />
               Instant Feedback
             </Badge>
-            <Badge variant="secondary" className="bg-white/20 text-white">
+            <Badge variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30 transition-smooth">
               5 Free Reviews/Day
             </Badge>
           </div>
@@ -213,9 +243,9 @@ export default function DocumentReviewPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Left Column: Input */}
             <div>
-              <Card className="mb-6">
+              <Card className="mb-6 hover-lift border-purple-200 bg-white transition-smooth">
                 <CardHeader>
-                  <CardTitle>Your Document</CardTitle>
+                  <CardTitle className="font-heading">Your Document</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {/* Document Type Selector */}
@@ -299,9 +329,9 @@ export default function DocumentReviewPage() {
               </Card>
 
               {/* Examples */}
-              <Card>
+              <Card className="hover-lift border-blue-200 bg-gradient-to-br from-blue-50 to-white transition-smooth">
                 <CardHeader>
-                  <CardTitle className="text-lg">Try an Example</CardTitle>
+                  <CardTitle className="text-lg font-heading">Try an Example</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">

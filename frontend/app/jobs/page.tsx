@@ -3,7 +3,7 @@ import type { Resource } from '@/lib/supabase'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Briefcase, ExternalLink, Clock } from 'lucide-react'
+import { Briefcase, ExternalLink, Clock, Check, CheckCircle, GraduationCap } from 'lucide-react'
 import Link from 'next/link'
 
 async function getJobResources() {
@@ -12,7 +12,7 @@ async function getJobResources() {
     .select('*')
     .eq('category', 'job')
     .order('created_at', { ascending: false })
-  
+
   return (data as Resource[]) || []
 }
 
@@ -61,18 +61,30 @@ export default async function JobsPage() {
 
       <div className="container mx-auto px-4 py-12">
         {/* Work Rules Info */}
-        <Card className="mb-12 bg-blue-50 border-blue-200">
+        <Card className="mb-12 bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 hover-lift transition-smooth">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-6 w-6 text-blue-600" />
+            <CardTitle className="flex items-center gap-2 font-heading">
+              <Clock className="h-6 w-6 text-primary" />
               Work Rules for International Students
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-            <p>✅ <strong>20 hours per week</strong> during academic sessions (classes in progress)</p>
-            <p>✅ <strong>Full-time</strong> during scheduled breaks (summer, winter holidays)</p>
-            <p>✅ <strong>No work permit required</strong> if you have valid study permit</p>
-            <p>✅ <strong>On-campus or off-campus</strong> work both allowed</p>
+          <CardContent className="space-y-3">
+            <p className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <span><strong>20 hours per week</strong> during academic sessions (classes in progress)</span>
+            </p>
+            <p className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <span><strong>Full-time</strong> during scheduled breaks (summer, winter holidays)</span>
+            </p>
+            <p className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <span><strong>No work permit required</strong> if you have valid study permit</span>
+            </p>
+            <p className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <span><strong>On-campus or off-campus</strong> work both allowed</span>
+            </p>
             <p className="text-sm text-gray-700 mt-4">Note: You can start working once your studies begin, not before.</p>
           </CardContent>
         </Card>
@@ -89,8 +101,8 @@ export default async function JobsPage() {
                     {typeof resource.metadata?.job_type === 'string'
                       ? resource.metadata.job_type
                       : typeof resource.metadata?.resource_type === 'string'
-                      ? resource.metadata.resource_type
-                      : 'Job Resource'}
+                        ? resource.metadata.resource_type
+                        : 'Job Resource'}
                   </Badge>
                 </div>
                 <CardTitle className="text-xl">{resource.title}</CardTitle>
@@ -117,21 +129,36 @@ export default async function JobsPage() {
         </div>
 
         {/* Post-Graduation Info */}
-        <Card className="bg-green-50 border-green-200">
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 hover-lift transition-smooth">
           <CardHeader>
-            <CardTitle>🎓 Post-Graduation Work Permit (PGWP)</CardTitle>
+            <CardTitle className="flex items-center gap-2 font-heading">
+              <GraduationCap className="h-6 w-6 text-green-600" />
+              Post-Graduation Work Permit (PGWP)
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="font-medium">After completing your studies, you can work in Canada full-time:</p>
-            <ul className="space-y-2 ml-4">
-              <li>✓ Program 8-12 months → 8-month work permit</li>
-              <li>✓ Program 2+ years → 3-year work permit</li>
-              <li>✓ Apply within 180 days of graduation</li>
-              <li>✓ Pathway to permanent residence through Express Entry</li>
+            <ul className="space-y-2 ml-4 list-none">
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <span>Program 8-12 months → 8-month work permit</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <span>Program 2+ years → 3-year work permit</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <span>Apply within 180 days of graduation</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <span>Pathway to permanent residence through Express Entry</span>
+              </li>
             </ul>
             <Button className="mt-4" variant="outline" asChild>
-              <a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada/work/after-graduation.html" 
-                 target="_blank" rel="noopener noreferrer">
+              <a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada/work/after-graduation.html"
+                target="_blank" rel="noopener noreferrer">
                 Learn More About PGWP <ExternalLink className="ml-2 h-4 w-4" />
               </a>
             </Button>

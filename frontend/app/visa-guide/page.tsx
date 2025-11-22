@@ -3,7 +3,7 @@ import type { Resource } from '@/lib/supabase'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ExternalLink, CheckCircle2 } from 'lucide-react'
+import { ExternalLink, CheckCircle2, DollarSign } from 'lucide-react'
 import Link from 'next/link'
 
 async function getVisaResources() {
@@ -12,7 +12,7 @@ async function getVisaResources() {
     .select('*')
     .eq('category', 'visa')
     .order('created_at', { ascending: false })
-  
+
   return (data as Resource[]) || []
 }
 
@@ -63,7 +63,7 @@ export default async function VisaGuidePage() {
         {/* Timeline Steps */}
         <div className="max-w-4xl mx-auto mb-12">
           <h2 className="text-3xl font-bold mb-8">Application Process</h2>
-          
+
           <div className="space-y-6">
             {[
               {
@@ -188,9 +188,12 @@ export default async function VisaGuidePage() {
 
         {/* Financial Requirements */}
         <div className="max-w-4xl mx-auto mt-12">
-          <Card className="bg-yellow-50 border-yellow-200">
+          <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200/50 hover-lift transition-smooth">
             <CardHeader>
-              <CardTitle>💰 Financial Requirements (2025)</CardTitle>
+              <CardTitle className="flex items-center gap-2 font-heading">
+                <DollarSign className="h-6 w-6 text-yellow-600" />
+                Financial Requirements (2025)
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <p><strong>Tuition:</strong> First year tuition fees (varies by program, typically $15,000-$30,000 CAD)</p>
