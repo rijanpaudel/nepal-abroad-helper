@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import Link from 'next/link'
+import Image from "next/image";
 
 const EXAMPLE_SOP = `I am writing to express my strong interest in pursuing a Master's degree in Computer Science at the University of Toronto. Having completed my Bachelor's degree in Computer Engineering from Tribhuvan University with a GPA of 3.8/4.0, I am eager to advance my knowledge in artificial intelligence and machine learning.
 
@@ -150,8 +151,15 @@ export default function DocumentReviewPage() {
       {/* Enhanced Navigation */}
       <nav className="border-b bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold font-heading bg-gradient-primary bg-clip-text text-transparent">
-            Admitto
+          <Link href="/">
+            <Image
+              src="/images/admitto-logo.png"
+              alt="Admitto logo"
+              width={120}
+              height={0}
+              sizes="100vw"
+              className="h-14 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}

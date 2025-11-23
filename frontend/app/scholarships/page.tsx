@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DollarSign, Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Image from "next/image";
 //import { ScholarshipFilters } from '@/components/scholarship-filters'
 
 async function getAllScholarships() {
@@ -47,8 +48,15 @@ export default async function ScholarshipsPage() {
       {/* Navigation */}
       <nav className="border-b bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            Admitto
+          <Link href="/">
+            <Image
+              src="/images/admitto-logo.png"
+              alt="Admitto logo"
+              width={120}
+              height={0}
+              sizes="100vw"
+              className="h-14 w-auto object-contain"
+            />
           </Link>
           <div className="flex gap-6">
             <Link href="/scholarships" className="text-blue-600 font-medium">

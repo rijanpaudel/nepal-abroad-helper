@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, GraduationCap, FileText, Briefcase, MessageSquare, DollarSign, Clock, Menu, X, Check, Sparkles } from 'lucide-react'
+import Image from "next/image";
 
 // Server component wrapper for data fetching
 export default function Home() {
@@ -24,8 +25,15 @@ function HomePage() {
       {/* Enhanced Navigation */}
       <nav className="border-b bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold font-heading bg-gradient-primary bg-clip-text text-transparent">
-            Admitto
+          <Link href="/">
+            <Image
+              src="/images/admitto-logo.png"
+              alt="Admitto logo"
+              width={120}
+              height={0}
+              sizes="100vw"
+              className="h-14 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -302,7 +310,15 @@ function HomePage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-bold font-heading text-lg mb-4 bg-gradient-primary bg-clip-text text-transparent">Admitto</h3>
+              <Image
+                src="/images/admitto-logo.png"
+                alt="Admitto logo"
+                width={200}
+                height={140}
+                priority
+                sizes="100vw"
+                className="h-20 w-auto object-contain mb-8"
+              />
               <p className="text-sm text-gray-600 leading-relaxed">
                 Free, curated, and AI-powered platform helping students study abroad.
               </p>
