@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowRight, GraduationCap, FileText, Briefcase, MessageSquare, DollarSign, Clock, Menu, X, Check, Sparkles } from 'lucide-react'
+import { ArrowRight, GraduationCap, FileText, Briefcase, MessageSquare, Clock, Menu, X, Check, Sparkles } from 'lucide-react'
 import Image from "next/image";
 
 // Server component wrapper for data fetching

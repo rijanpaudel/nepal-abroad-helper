@@ -3,7 +3,8 @@ import OpenAI from 'openai'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
 
-const pdf = require('pdf-parse');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import pdf from 'pdf-parse';
 import mammoth from 'mammoth'
 
 // Initialize OpenAI
