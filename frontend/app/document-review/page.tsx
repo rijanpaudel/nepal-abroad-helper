@@ -15,6 +15,7 @@ import {
   Copy,
   Menu,
   X,
+  Upload,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import Link from 'next/link'
@@ -79,6 +80,7 @@ export default function DocumentReviewPage() {
   const [error, setError] = useState<string | null>(null);
   const [remainingReviews, setRemainingReviews] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
 
   const wordCount = documentText
     .trim()
@@ -87,8 +89,8 @@ export default function DocumentReviewPage() {
   const charCount = documentText.length;
 
   const handleSubmit = async () => {
-    if (!documentText.trim()) {
-      setError("Please enter your document text");
+    if (!documentText.trim() && !file) {
+      setError("Please enter your document text or upload a file");
       return;
     }
 
@@ -97,15 +99,14 @@ export default function DocumentReviewPage() {
     setFeedback(null);
 
     try {
+      const formData = new FormData();
+      formData.append("documentType", documentType);
+      if (documentText.trim()) formData.append("documentText", documentText);
+      if (file) formData.append("file", file);
+
       const response = await fetch("/api/review-document", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          documentText,
-          documentType,
-        }),
+        body: formData,
       });
 
       const data = await response.json();
@@ -142,6 +143,7 @@ export default function DocumentReviewPage() {
   const handleLoadExample = (type: "sop" | "resume") => {
     setDocumentType(type);
     setDocumentText(type === "sop" ? EXAMPLE_SOP : EXAMPLE_RESUME);
+    setFile(null);
     setFeedback(null);
     setError(null);
   };
@@ -275,21 +277,75 @@ export default function DocumentReviewPage() {
                     </Tabs>
                   </div>
 
-                  {/* Text Area */}
-                  <Textarea
-                    value={documentText}
-                    onChange={(e: {
-                      target: { value: SetStateAction<string> };
-                    }) => setDocumentText(e.target.value)}
-                    placeholder={
-                      documentType === "sop"
-                        ? "Paste your Statement of Purpose here..."
-                        : documentType === "resume"
-                          ? "Paste your resume text here..."
-                          : "Paste your cover letter here..."
-                    }
-                    className="min-h-[400px] font-mono text-sm"
-                  />
+                  {/* Input Area */}
+                  <div className="space-y-4">
+                    {documentType === "sop" && (
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">
+                          Paste Text
+                        </label>
+                        <Textarea
+                          value={documentText}
+                          onChange={(e) => setDocumentText(e.target.value)}
+                          placeholder="Paste your Statement of Purpose here..."
+                          className="min-h-[200px] font-mono text-sm"
+                        />
+                        <div className="relative py-2">
+                          <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                          </div>
+                          <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-white px-2 text-gray-500">
+                              Or upload file
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div
+                      className={`border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer ${file ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-primary/50 hover:bg-gray-50'
+                        }`}
+                      onClick={() => document.getElementById('file-upload')?.click()}
+                    >
+                      <input
+                        id="file-upload"
+                        type="file"
+                        className="hidden"
+                        accept=".pdf,.docx,.txt"
+                        onChange={(e) => {
+                          const selectedFile = e.target.files?.[0];
+                          if (selectedFile) {
+                            setFile(selectedFile);
+                            // Clear text if it's not SOP (since others are upload only)
+                            if (documentType !== 'sop') {
+                              setDocumentText("");
+                            }
+                          }
+                        }}
+                      />
+                      <Upload className={`h-10 w-10 mx-auto mb-3 ${file ? 'text-primary' : 'text-gray-400'}`} />
+                      <p className="font-medium text-gray-900">
+                        {file ? file.name : "Click to upload document"}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "PDF, DOCX, or TXT (Max 5MB)"}
+                      </p>
+                      {file && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="mt-2 text-red-500 hover:text-red-700 hover:bg-red-50"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setFile(null);
+                          }}
+                        >
+                          Remove File
+                        </Button>
+                      )}
+                    </div>
+                  </div>
 
                   {/* Stats */}
                   <div className="flex justify-between text-sm text-gray-600 mt-2">
@@ -301,7 +357,7 @@ export default function DocumentReviewPage() {
                   <div className="flex gap-2 mt-4">
                     <Button
                       onClick={handleSubmit}
-                      disabled={isLoading || !documentText.trim()}
+                      disabled={isLoading || (!documentText.trim() && !file)}
                       className="flex-1"
                     >
                       {isLoading ? (
@@ -320,6 +376,7 @@ export default function DocumentReviewPage() {
                       variant="outline"
                       onClick={() => {
                         setDocumentText("");
+                        setFile(null);
                         setFeedback(null);
                         setError(null);
                       }}

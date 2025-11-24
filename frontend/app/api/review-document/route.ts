@@ -3,8 +3,8 @@ import OpenAI from 'openai'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
 
-// Edge runtime for better performance
-export const runtime = 'edge'
+const pdf = require('pdf-parse');
+import mammoth from 'mammoth'
 
 // Initialize OpenAI
 const openai = new OpenAI({
@@ -14,7 +14,7 @@ const openai = new OpenAI({
 // Initialize rate limiter (5 requests per 24 hours per IP)
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(50, '1 h'),
+  limiter: Ratelimit.slidingWindow(5, '24 h'),
   analytics: true,
 })
 
@@ -236,6 +236,27 @@ function getSystemPrompt(documentType: string): string {
   }
 }
 
+async function extractTextFromFile(file: File): Promise<string> {
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const type = file.type;
+  const name = file.name.toLowerCase();
+
+  if (type === 'application/pdf' || name.endsWith('.pdf')) {
+    const data = await pdf(buffer);
+    return data.text;
+  } else if (
+    type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    name.endsWith('.docx')
+  ) {
+    const result = await mammoth.extractRawText({ buffer });
+    return result.value;
+  } else if (type === 'text/plain' || name.endsWith('.txt')) {
+    return buffer.toString('utf-8');
+  }
+
+  throw new Error('Unsupported file type');
+}
+
 // Input validation and sanitization
 function validateInput(data: ReviewRequest): { valid: boolean; error?: string } {
   // Check document type
@@ -298,10 +319,46 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse request
-    const data: ReviewRequest = await req.json()
+    const formData = await req.formData()
+    const documentType = formData.get('documentType') as 'sop' | 'resume' | 'cover-letter'
+    let documentText = formData.get('documentText') as string || ''
+    const file = formData.get('file') as File | null
+    const programType = formData.get('programType') as string | undefined
+    const targetUniversity = formData.get('targetUniversity') as string | undefined
+
+    if (file) {
+      console.log('File received:', { name: file.name, type: file.type, size: file.size });
+      try {
+        const fileText = await extractTextFromFile(file)
+        console.log('File text extracted successfully, length:', fileText.length);
+        // For SOP, append file text to existing text if any. For others, just use file text.
+        if (documentType === 'sop' && documentText) {
+          documentText = `${documentText}\n\n[ATTACHED FILE CONTENT]:\n${fileText}`
+        } else {
+          documentText = fileText
+        }
+      } catch (e) {
+        console.error('File parsing error:', e)
+        return NextResponse.json(
+          { error: 'Failed to read file content. Please ensure the file is a valid PDF, DOCX, or TXT.' },
+          { status: 400, headers }
+        )
+      }
+    }
+
+    console.log('Document type:', documentType);
+    console.log('Document text length:', documentText.length);
+
+    const data: ReviewRequest = {
+      documentText,
+      documentType,
+      programType,
+      targetUniversity
+    }
 
     // Validate input
     const validation = validateInput(data)
+    console.log('Validation result:', validation);
     if (!validation.valid) {
       return NextResponse.json(
         { error: validation.error },
@@ -316,11 +373,11 @@ export async function POST(req: NextRequest) {
 
     // Add context if provided
     let userPrompt = `Please review this ${data.documentType.toUpperCase()}:\n\n${data.documentText}`
-    
+
     if (data.programType) {
       userPrompt += `\n\nTarget Program: ${data.programType}`
     }
-    
+
     if (data.targetUniversity) {
       userPrompt += `\nTarget University: ${data.targetUniversity}`
     }
